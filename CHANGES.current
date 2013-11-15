@@ -16,6 +16,32 @@ Version 3.0.0 (in progress)
 
             *** POTENTIAL INCOMPATIBILITY  ***
 
+2013-11-09: wsfulton
+            [C#] Apply patch #79 from Brant Kyser
+              - Remove using directives from the generated C# code and fully qualify the use of all .NET
+                framework types in order to minimize potential name collisions from input files defining
+                types, namespace, etc with the same name as .NET framework members.
+              - Globally qualify the use of .NET framework types in the System namespace
+              - Remove .NET 1.1 support, .NET 2 is the minimum for the C# module
+
+            This is a potential backwards compatibility break if code has been added relying on these using
+            statements that used to be generated:
+
+              using System;
+              using System.Runtime.InteropServices;
+
+            The quick fix to add these back in is to add the -DSWIG2_CSHARP command line option when
+            executing SWIG. See CSharp.html documentation for more info.
+
+            *** POTENTIAL INCOMPATIBILITY  ***
+
+2013-11-05: wsfulton
+            [Java] Fix some corner cases for the $packagepath/$javaclassname special variable substitution.
+
+2013-11-05: wsfulton
+            [Java] Apply patch #91 from Marvin Greenberg - Add director:except feature for improved
+            exception handling in director methods for Java.
+
 2013-10-17: wsfulton
             [R] Fix SF #1340 - Visual Studio compile error in C++ wrappers due to #include <exception>
             within extern "C" block.
