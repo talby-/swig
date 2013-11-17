@@ -49,15 +49,16 @@ $var_unsigned_long = createref_unsigned_long(10);
 is(value_unsigned_long($var_unsigned_long), 10, 'ulong');
 
 SKIP: {
-  no warnings 'portable';
-  skip "64 bit int support", 1 unless eval { pack 'q', 1 };
-  my $ll = '6FFFFFFFFFFFFFF8';
-  $var_long_long = createref_long_long(hex $ll);
-  is(value_long_long($var_long_long), hex $ll, 'long long');
-
-  my $ull = 'FFFFFFF2FFFFFFF0';
-  $var_unsigned_long_long = createref_unsigned_long_long(hex $ull);
-  is(value_unsigned_long_long($var_unsigned_long_long), hex $ull, 'ulong long');
+	use Math::BigInt qw();
+	skip "64 bit int support", 2 unless eval { pack 'q', 1 };
+	# the pack dance is to get plain old IVs out of the
+	# Math::BigInt objects.
+	my $ll = unpack 'q', pack 'q', Math::BigInt->new('8070450532247928824');
+	$var_long_long = createref_long_long($ll);
+	is(value_long_long($var_long_long), $ll, 'long long');
+        my $ull = unpack 'Q', pack 'Q', Math::BigInt->new('18446744017874976752');
+        $var_unsigned_long_long = createref_unsigned_long_long($ull);
+        is(value_unsigned_long_long($var_unsigned_long_long), $ull, 'ulong long')
 }
 
 $var_float = createref_float(10.5);
